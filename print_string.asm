@@ -1,3 +1,4 @@
+;parameter: bx
 print_string:
     pusha
     mov ah, 0x0e
@@ -15,3 +16,6 @@ print_each_character:
 print_done:
     popa
     ret
+
+HELLO_MSG: db "Hello, World!", 0
+GOODBYE_MSG: db "Goodbye, World!", 0
