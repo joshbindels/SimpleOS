@@ -1,3 +1,5 @@
 .vimrc
 *.swp
 *.bin
+*.o
+os-image
