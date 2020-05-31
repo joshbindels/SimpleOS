@@ -1,1 +1,1 @@
-qemu-system-x86_64 main.bin -curses
+qemu-system-x86_64 -curses -fda os-image

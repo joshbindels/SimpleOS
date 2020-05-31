@@ -1,0 +1,6 @@
+./compile_asm
+nasm kernel_entry.asm -f elf -o kernel_entry.o
+gcc -ffreestanding -m32 -fno-pie -c kernel.c -o kernel.o
+ld -o kernel.bin -m elf_i386 -Ttext 0x1000 kernel_entry.o kernel.o --oformat binary
+
+cat main.bin kernel.bin > os-image
