@@ -1,26 +1,31 @@
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h)
+OBJ = ${C_SOURCES:.c=.o}
+
+
 all: os-image
 
 run: all
 	qemu-system-x86_64 -curses -fda os-image
 
-os-image: boot_sect.bin kernel.bin
+os-image: boot/boot_sect.bin kernel.bin
 	cat $^ > $@
 
-kernel.bin: kernel_entry.o kernel.o
+kernel.bin: boot/kernel_entry.o ${OBJ}
 	ld -o $@ -m elf_i386 -Ttext 0x1000 $^ --oformat binary
 
-kernel.o: kernel.c
+%.o : %.c ${HEADERS}
 	gcc -ffreestanding -m32 -fno-pie -c $< -o $@
 
-kernel_entry.o: kernel_entry.asm
+%.o : %.asm
 	nasm $< -f elf -o $@
 
-boot_sect.bin: main.asm
+%.bin : %.asm
 	nasm -f bin $< -o $@
 
 clean:
 	rm -rf *.bin *.o *.dis os-image *.map
+	rm -rf kernel/*.o boot/*.bin drivers/*.o
 
 kernel.dis: kernel.bin
 	ndisasm -b 32 $< > $@
-
